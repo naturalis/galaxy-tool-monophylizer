@@ -54,4 +54,4 @@ planemo shed_update --shed_target toolshed
 
 If you use this tool, please cite:
 
-Marko, M., et al., 2016. Species-level para-and polyphyly in DNA barcode gene trees: strong operational bias in European Lepidoptera. Systematic Biology. 65(6):1024-1040 doi:10.1093/sysbio/syw044
+**Marko, M.**, et al., 2016. Species-level para-and polyphyly in DNA barcode gene trees: strong operational bias in European Lepidoptera. _Systematic Biology_. **65(6)**:1024-1040 doi:10.1093/sysbio/syw044
