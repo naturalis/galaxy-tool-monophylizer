@@ -12,6 +12,8 @@ jobs:
   lint:
     name: Lint Galaxy Tool XML
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout repository
