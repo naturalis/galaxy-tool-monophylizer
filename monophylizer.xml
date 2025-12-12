@@ -2,7 +2,7 @@
     <description>Assess monophyly in barcode gene trees</description>
     
     <requirements>
-        <requirement type="package">perl-bio-monophylizer</requirement>
+        <requirement type="package" version="1.0.0">perl-bio-monophylizer</requirement>
     </requirements>
     
     <command detect_errors="exit_code"><![CDATA[
