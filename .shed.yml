@@ -1,0 +1,10 @@
+name: monophylizer
+owner: naturalis
+description: Assess monophyly in barcode gene trees
+long_description: |
+  Galaxy tool for assessing monophyly in barcode gene trees. This tool takes an input gene tree with multiple species each having multiple haplotypes and assesses the extent and nature of the entanglement of the tips. For each species, it reports whether all the tips for that species are monophyletic with respect to each other or whether they are entangled with another species and, if so, whether this is polyphyly or paraphyly. The output is a tab-separated table.
+remote_repository_url: https://github.com/naturalis/galaxy-tool-monophylizer
+homepage_url: https://github.com/naturalis/galaxy-tool-monophylizer
+categories:
+  - Phylogenetics
+  - Sequence Analysis
