@@ -7,12 +7,50 @@
     
     <command detect_errors="exit_code"><![CDATA[
         monophylizer.pl
-            '$input'
+            --infile '$infile'
+            --format '$format'
+            #if $metadata
+                --metadata '$metadata'
+            #end if
+            --separator '$separator'
+            #if $advanced_options.comments
+                --comments
+            #end if
+            #if $advanced_options.quotes
+                --quotes
+            #end if
+            #if $advanced_options.whitespace
+                --whitespace
+            #end if
+            #if $advanced_options.trinomials
+                --trinomials
+            #end if
             > '$output'
     ]]></command>
     
     <inputs>
-        <param name="input" type="data" format="txt" label="Input file" help="Input data for monophyly assessment"/>
+        <param name="infile" type="data" format="newick,nexus,nexml,phyloxml" label="Tree file" help="A tree file, usually in Newick format"/>
+        
+        <param name="format" type="select" label="Tree file format" help="Specify the tree file format (default: newick)">
+            <option value="newick" selected="true">Newick</option>
+            <option value="nexus">Nexus</option>
+            <option value="nexml">NeXML</option>
+            <option value="phyloxml">PhyloXML</option>
+        </param>
+        
+        <param name="metadata" type="data" format="tabular" optional="true" label="Metadata file" help="Tab-separated spreadsheet with per-taxon metadata to be merged into the output"/>
+        
+        <param name="separator" type="text" value="|" label="Separator character" help="Character that separates the taxon name from additional metadata in leaf labels (default: |)"/>
+        
+        <section name="advanced_options" title="Advanced Options" expanded="false">
+            <param name="comments" type="boolean" checked="true" label="Treat square brackets as opaque strings" help="If checked, square brackets are treated as opaque strings, not comments"/>
+            
+            <param name="quotes" type="boolean" checked="true" label="Treat quotes as opaque strings" help="If checked, quotes are treated as opaque strings"/>
+            
+            <param name="whitespace" type="boolean" checked="true" label="Treat whitespace as opaque strings" help="If checked, whitespace is treated as opaque strings"/>
+            
+            <param name="trinomials" type="boolean" checked="false" label="Include subspecific epithets" help="If checked, include subspecific epithets in taxa"/>
+        </section>
     </inputs>
     
     <outputs>
@@ -26,7 +64,17 @@ This tool uses monophylizer.pl to assess monophyly in barcode gene trees.
 
 **Input**
 
-Input data file for monophyly assessment.
+- **Tree file**: A tree file in one of the supported formats (Newick, Nexus, NeXML, or PhyloXML)
+- **Tree file format**: Specify the format of the input tree file (default: Newick)
+- **Metadata file** (optional): A tab-separated spreadsheet with per-taxon metadata to be merged into the output
+- **Separator character**: The character that separates the taxon name from additional metadata in leaf labels (default: |)
+
+**Advanced Options**
+
+- **Treat square brackets as opaque strings**: If enabled, square brackets are not treated as comments (default: enabled)
+- **Treat quotes as opaque strings**: If enabled, quotes are treated as opaque strings (default: enabled)
+- **Treat whitespace as opaque strings**: If enabled, whitespace is treated as opaque strings (default: enabled)
+- **Include subspecific epithets**: If enabled, include subspecific epithets in taxa (default: disabled)
 
 **Output**
 
