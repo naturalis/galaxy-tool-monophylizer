@@ -1,0 +1,38 @@
+<tool id="monophylizer" name="Monophylizer" version="1.0.0">
+    <description>Assess monophyly in barcode gene trees</description>
+    
+    <requirements>
+        <requirement type="package">perl-bio-monophylizer</requirement>
+    </requirements>
+    
+    <command detect_errors="exit_code"><![CDATA[
+        monophylizer.pl
+            '$input'
+            > '$output'
+    ]]></command>
+    
+    <inputs>
+        <param name="input" type="data" format="txt" label="Input file" help="Input data for monophyly assessment"/>
+    </inputs>
+    
+    <outputs>
+        <data name="output" format="txt" label="${tool.name} on ${on_string}"/>
+    </outputs>
+    
+    <help><![CDATA[
+**What it does**
+
+This tool uses monophylizer.pl to assess monophyly in barcode gene trees.
+
+**Input**
+
+Input data file for monophyly assessment.
+
+**Output**
+
+Results of monophyly assessment.
+    ]]></help>
+    
+    <citations>
+    </citations>
+</tool>
