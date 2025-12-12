@@ -29,12 +29,11 @@
     ]]></command>
     
     <inputs>
-        <param name="infile" type="data" format="newick,nexus,nexml,phyloxml" label="Tree file" help="A tree file, usually in Newick format"/>
+        <param name="infile" type="data" format="newick,nexus,phyloxml" label="Tree file" help="A tree file, usually in Newick format"/>
         
         <param name="format" type="select" label="Tree file format" help="Specify the tree file format (default: newick)">
             <option value="newick" selected="true">Newick</option>
             <option value="nexus">Nexus</option>
-            <option value="nexml">NeXML</option>
             <option value="phyloxml">PhyloXML</option>
         </param>
         
