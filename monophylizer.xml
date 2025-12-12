@@ -66,7 +66,7 @@ This tool uses monophylizer.pl to assess monophyly in barcode gene trees.
 - **Tree file**: A tree file in one of the supported formats (Newick, Nexus, NeXML, or PhyloXML)
 - **Tree file format**: Specify the format of the input tree file (default: Newick)
 - **Metadata file** (optional): A tab-separated spreadsheet with per-taxon metadata to be merged into the output
-- **Separator character**: The character that separates the taxon name from additional metadata in leaf labels (default: |)
+- **Separator character**: The character that separates the taxon name from additional metadata in leaf labels (default: `|`)
 
 **Advanced Options**
 
