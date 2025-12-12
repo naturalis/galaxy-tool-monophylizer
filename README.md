@@ -29,13 +29,13 @@ pip install planemo
 4. Validate your tool XML:
 
 ```bash
-planemo lint structural_validator.xml
+planemo lint monophylizer.xml
 ```
 
 5. Test your tool:
 
 ```bash
-planemo test structural_validator.xml
+planemo test monophylizer.xml
 ```
 
 6. Publish your tool:
