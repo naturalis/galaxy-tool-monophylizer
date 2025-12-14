@@ -1,0 +1,65 @@
+name: Planemo Test
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  test:
+    name: Test Galaxy Tool with Bioconda
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          python-version: '3.11'
+          channels: conda-forge,bioconda
+          channel-priority: strict
+          activate-environment: planemo
+      
+      - name: Install Planemo
+        shell: bash -el {0}
+        run: |
+          python -m pip install --upgrade pip
+          pip install 'planemo>=0.75'
+      
+      - name: Test tool with Planemo
+        shell: bash -el {0}
+        run: planemo test --conda_auto_install monophylizer.xml
+      
+      - name: Show test output for debugging
+        if: failure()
+        shell: bash -el {0}
+        run: |
+          echo "=== Checking for Galaxy test outputs ==="
+          find . -name "*.log" -o -name "tool_test_output.*" | head -10
+          if [ -f "tool_test_output.html" ]; then
+            echo "=== Test output HTML found ==="
+            cat tool_test_output.html | grep -A 20 "output" || true
+          fi
+          # Try to find the actual output file generated during test
+          echo "=== Looking for generated output files ==="
+          find . -path "*/outputs/*" -name "*.tsv" 2>/dev/null | head -5
+          # Show differences if we can find them
+          if find . -path "*/outputs/*" -name "*.tsv" 2>/dev/null | head -1 | read output_file; then
+            echo "=== Found generated output: $output_file ==="
+            echo "--- First few lines of generated output ---"
+            head -n 10 "$output_file" || true
+            echo "--- Last character hex dump ---"
+            tail -c 10 "$output_file" | od -An -tx1 || true
+            echo "--- Line count ---"
+            wc -l "$output_file" || true
+            echo "--- Comparing with expected ---"
+            diff -u test-data/output.tsv "$output_file" || true
+          fi
