@@ -50,6 +50,25 @@ planemo shed_create --shed_target toolshed
 planemo shed_update --shed_target toolshed
 ```
 
+## CI/CD and Testing
+
+This repository includes GitHub Actions workflows for continuous testing:
+
+### Viewing Test Outputs
+
+The `planemo-test.yml` workflow automatically runs tests on every push and pull request. It captures all temporary output files generated during testing and uploads them as artifacts. You can:
+
+1. Go to the Actions tab in GitHub
+2. Click on a workflow run
+3. Scroll down to "Artifacts" section
+4. Download `planemo-test-outputs` to view the actual output files generated during testing
+5. The workflow logs also display the contents of TSV output files inline
+
+This is useful for:
+- Debugging test failures
+- Verifying the actual output format
+- Updating test-data files when the tool behavior changes
+
 ## Citation
 
 If you use this tool, please cite:
