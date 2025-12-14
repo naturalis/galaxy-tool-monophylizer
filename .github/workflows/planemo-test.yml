@@ -38,8 +38,8 @@ jobs:
         shell: bash -el {0}
         run: planemo test --conda_auto_install monophylizer.xml
       
-      - name: Show test output for debugging
-        if: failure()
+      - name: Capture test outputs
+        if: always()
         shell: bash -el {0}
         run: |
           echo "=== Checking for Galaxy test outputs ==="
@@ -63,3 +63,19 @@ jobs:
             echo "--- Comparing with expected ---"
             diff -u test-data/output.tsv "$output_file" || true
           fi
+          # Copy generated outputs to a directory for artifact upload
+          mkdir -p captured-outputs
+          find . -path "*/outputs/*" -type f \( -name "*.tsv" -o -name "*.txt" -o -name "*.log" \) 2>/dev/null | while read file; do
+            cp "$file" "captured-outputs/$(basename $file)" || true
+          done
+          # List what we captured
+          echo "=== Files captured for artifact upload ==="
+          ls -lah captured-outputs/ || echo "No files captured"
+      
+      - name: Upload test outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: planemo-test-outputs
+          path: captured-outputs/
+          if-no-files-found: warn
