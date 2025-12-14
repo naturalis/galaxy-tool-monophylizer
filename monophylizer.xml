@@ -59,6 +59,7 @@
     <tests>
         <test>
             <param name="infile" value="input.nwk" />
+            <param name="separator" value="|" />
             <output name="output" file="output.tsv" />
         </test>   
     </tests>
