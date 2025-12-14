@@ -65,12 +65,26 @@ jobs:
           fi
           # Copy generated outputs to a directory for artifact upload
           mkdir -p captured-outputs
-          find . -path "*/outputs/*" -type f \( -name "*.tsv" -o -name "*.txt" -o -name "*.log" \) 2>/dev/null | while read file; do
+          # Capture all files from outputs directories
+          find . -path "*/outputs/*" -type f 2>/dev/null | while read file; do
+            # Preserve relative structure by creating a unique name
+            relative_path=$(echo "$file" | sed 's|^\./||' | sed 's|/|_|g')
+            cp "$file" "captured-outputs/${relative_path}" || true
+          done
+          # Also capture any HTML test reports
+          find . -name "tool_test_output.html" -o -name "tool_test_output.json" 2>/dev/null | while read file; do
             cp "$file" "captured-outputs/$(basename $file)" || true
           done
           # List what we captured
           echo "=== Files captured for artifact upload ==="
           ls -lah captured-outputs/ || echo "No files captured"
+          # Show contents of captured TSV files
+          for file in captured-outputs/*.tsv; do
+            if [ -f "$file" ]; then
+              echo "=== Contents of $file ==="
+              cat "$file"
+            fi
+          done
       
       - name: Upload test outputs
         if: always()
