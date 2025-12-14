@@ -38,8 +38,8 @@ jobs:
         shell: bash -el {0}
         run: planemo test --conda_auto_install monophylizer.xml
       
-      - name: Show test output for debugging
-        if: failure()
+      - name: Capture test outputs
+        if: always()
         shell: bash -el {0}
         run: |
           echo "=== Checking for Galaxy test outputs ==="
@@ -63,3 +63,33 @@ jobs:
             echo "--- Comparing with expected ---"
             diff -u test-data/output.tsv "$output_file" || true
           fi
+          # Copy generated outputs to a directory for artifact upload
+          mkdir -p captured-outputs
+          # Capture all files from outputs directories
+          find . -path "*/outputs/*" -type f -print0 2>/dev/null | while IFS= read -r -d '' file; do
+            # Preserve relative structure by encoding path separators as double underscores
+            relative_path=$(echo "$file" | sed 's|^\./||' | sed 's|/|__|g')
+            cp "$file" "captured-outputs/${relative_path}" || true
+          done
+          # Also capture any HTML test reports
+          find . \( -name "tool_test_output.html" -o -name "tool_test_output.json" \) -print0 2>/dev/null | while IFS= read -r -d '' file; do
+            cp "$file" "captured-outputs/$(basename "$file")" || true
+          done
+          # List what we captured
+          echo "=== Files captured for artifact upload ==="
+          ls -lah captured-outputs/ || echo "No files captured"
+          # Show contents of captured TSV files
+          shopt -s nullglob
+          for file in captured-outputs/*.tsv; do
+            echo "=== Contents of $file ==="
+            cat "$file"
+          done
+          shopt -u nullglob
+      
+      - name: Upload test outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: planemo-test-outputs
+          path: captured-outputs/
+          if-no-files-found: warn
