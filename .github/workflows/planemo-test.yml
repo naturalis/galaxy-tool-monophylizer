@@ -67,8 +67,8 @@ jobs:
           mkdir -p captured-outputs
           # Capture all files from outputs directories
           find . -path "*/outputs/*" -type f -print0 2>/dev/null | while IFS= read -r -d '' file; do
-            # Preserve relative structure by creating a unique name
-            relative_path=$(echo "$file" | sed 's|^\./||' | sed 's|/|_|g')
+            # Preserve relative structure by creating a unique name with timestamp to avoid collisions
+            relative_path=$(echo "$file" | sed 's|^\./||' | sed 's|/|__|g')
             cp "$file" "captured-outputs/${relative_path}" || true
           done
           # Also capture any HTML test reports
@@ -81,10 +81,8 @@ jobs:
           # Show contents of captured TSV files
           shopt -s nullglob
           for file in captured-outputs/*.tsv; do
-            if [ -f "$file" ]; then
-              echo "=== Contents of $file ==="
-              cat "$file"
-            fi
+            echo "=== Contents of $file ==="
+            cat "$file"
           done
           shopt -u nullglob
       
