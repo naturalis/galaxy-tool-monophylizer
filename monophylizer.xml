@@ -39,7 +39,11 @@
         
         <param name="metadata" type="data" format="tabular" optional="true" label="Metadata file" help="Tab-separated spreadsheet with per-taxon metadata to be merged into the output"/>
         
-        <param name="separator" type="text" value="|" sanitize="False" label="Separator character" help="Character that separates the taxon name from additional metadata in leaf labels (default: &#124;)"/>
+        <param name="separator" type="text" value="|" label="Separator character" help="Character that separates the taxon name from additional metadata in leaf labels (default: |)">
+            <sanitizer>
+                <valid initial="string.printable"/>
+            </sanitizer>
+        </param>
         
         <section name="advanced_options" title="Advanced Options" expanded="false">
             <param name="comments" type="boolean" checked="true" label="Treat square brackets as opaque strings" help="If checked, square brackets are treated as opaque strings, not comments"/>
@@ -59,7 +63,7 @@
     <tests>
         <test>
             <param name="infile" value="input.nwk" />
-            <param name="separator" value="|" sanitize="False" />
+            <param name="separator" value="|" />
             <output name="output" file="output.tsv" />
         </test>   
     </tests>
