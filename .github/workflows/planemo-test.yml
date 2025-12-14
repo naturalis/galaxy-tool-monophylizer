@@ -79,12 +79,14 @@ jobs:
           echo "=== Files captured for artifact upload ==="
           ls -lah captured-outputs/ || echo "No files captured"
           # Show contents of captured TSV files
+          shopt -s nullglob
           for file in captured-outputs/*.tsv; do
             if [ -f "$file" ]; then
               echo "=== Contents of $file ==="
               cat "$file"
             fi
           done
+          shopt -u nullglob
       
       - name: Upload test outputs
         if: always()
