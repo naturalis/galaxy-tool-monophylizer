@@ -1,97 +1,107 @@
 # Monophylizer
 
-Galaxy tool for assessing monophyly in barcode gene trees. This tool takes an input gene tree with multiple species each having multiple haplotypes and assesses the extent and nature of the entanglement of the tips. For each species, it reports whether all the tips for that species are monophyletic with respect to each other or whether they are entangled with another species and, if so, whether this is polyphyly or paraphyly. The output is a tab-separated table.
+A Galaxy tool for assessing monophyly in barcode gene trees.
 
-This tool was developed and used in a broad survey of barcode gene trees from European Lepidoptera. The survey showed that poly- and paraphyly are caused by a variety of mechanisms, including the influence of various tree-building algorithms, misidentification of specimens, and biological processes such as incomplete lineage sorting and introgression. As such, it can be used both for studying biology and for assessing data quality and analytical methods.
+## Introduction
 
-## Releasing to toolshed
+Monophylizer is a Galaxy tool designed to assess the monophyly of species in barcode gene trees. When working with phylogenetic trees containing multiple species, each with multiple DNA barcode sequences (haplotypes), this tool evaluates whether the sequences from each species form monophyletic groups or whether they are entangled with sequences from other species.
 
-How to submit a tool to the Galaxy ToolShed:
+For each species in the input tree, Monophylizer determines:
+- Whether all sequences for that species are **monophyletic** (forming a single clade)
+- Whether sequences are **polyphyletic** (scattered across the tree in multiple unrelated clades)
+- Whether sequences are **paraphyletic** (forming a clade that also contains sequences from other species)
 
-1. Create an account on the [ToolShed](https://toolshed.g2.bx.psu.edu/)
-2. Create a $HOME/.planemo.yml file with the following content:
+The tool outputs a tab-separated table containing the monophyly assessment for each species, along with information about which species they are entangled with (if any).
 
-```yaml
-shed_username: $USER # your ToolShed username
-sheds:
-  toolshed:
-    key: $KEY        # your ToolShed API key, under 'User > API Keys'
-    email: $EMAIL    # your ToolShed email
-    password: $PASS  # your ToolShed password
-```
+### Background
 
-3. Install Planemo:
+This tool was developed and used in a broad survey of barcode gene trees from European Lepidoptera. The survey showed that poly- and paraphyly are caused by a variety of mechanisms, including:
+- The influence of various tree-building algorithms
+- Misidentification of specimens
+- Biological processes such as incomplete lineage sorting and introgression
 
-```bash
-pip install planemo
-```
+As such, Monophylizer can be used both for studying evolutionary biology and for assessing data quality and analytical methods in DNA barcoding studies.
 
-4. Validate your tool XML:
+## Installation
 
-```bash
-planemo lint monophylizer.xml
-```
+Monophylizer is available through the Galaxy ToolShed and can be installed on any Galaxy instance.
 
-5. Test your tool:
+### Installing from the ToolShed
 
-```bash
-planemo test monophylizer.xml
-```
+1. Log in to your Galaxy instance as an administrator
+2. Navigate to **Admin** > **Install and Uninstall** (or **Search Tool Shed**)
+3. Search for "monophylizer" in the search box
+4. Click on the tool and select **Install to Galaxy**
+5. Choose or create a tool panel section for the tool
+6. Click **Install**
 
-6. Publish your tool:
+The tool will be available under the selected tool panel section once installation is complete.
 
-```bash
-planemo shed_create --shed_target toolshed
-```
+Alternatively, you can find the tool directly on the [Galaxy ToolShed](https://toolshed.g2.bx.psu.edu/) by searching for "monophylizer" under the owner "naturalis".
 
-7. Update your tool:
+## Usage
 
-```bash
-planemo shed_update --shed_target toolshed
-```
+### Input Data
 
-## CI/CD and Testing
+**Required:**
+- **Tree file**: A phylogenetic tree file containing your barcode gene tree. The tree should have multiple sequences per species, with species names included in the tip labels.
+  - Supported formats: Newick, Nexus, or PhyloXML
+  - Default format: Newick
 
-This repository includes GitHub Actions workflows for continuous testing and publishing:
+**Optional:**
+- **Metadata file**: A tab-separated file containing additional per-taxon metadata that will be merged into the output table
 
-### Automated Publishing to Galaxy Toolshed
+### Parameters
 
-The `planemo-publish.yml` workflow automatically publishes the tool to the Galaxy Toolshed when a new version is tagged. To use this workflow:
+**Basic Options:**
+- **Tree file format**: Select the format of your input tree file (Newick, Nexus, or PhyloXML)
+- **Separator character**: The character that separates the taxon name from additional metadata in leaf labels (default: `|`)
 
-1. Set up the following repository secrets (Settings > Secrets and variables > Actions):
-   - `USER`: Your Galaxy Toolshed username
-   - `KEY`: Your Toolshed API key (found under User > API Keys)
-   - `EMAIL`: Your Toolshed account email
-   - `PASS`: Your Toolshed account password
+**Advanced Options:**
+- **Treat square brackets as opaque strings**: If enabled, square brackets in taxon names are not treated as comments (default: enabled)
+- **Treat quotes as opaque strings**: If enabled, quotes in taxon names are treated as literal characters (default: enabled)
+- **Treat whitespace as opaque strings**: If enabled, whitespace in taxon names is preserved (default: enabled)
+- **Include subspecific epithets**: If enabled, subspecific names (trinomials) are included in the species identification (default: disabled)
 
-2. Create a new tag to trigger publishing:
-   ```bash
-   git tag v1.0.0
-   git push origin v1.0.0
-   ```
+### Output Data
 
-The workflow will automatically:
-- Install Planemo and dependencies
-- Create the Planemo configuration file
-- Update the existing tool in the toolshed (or create it if it doesn't exist yet)
+The tool produces a **tab-separated table** with the following columns:
 
-### Viewing Test Outputs
+- **Species**: The species name extracted from the tree tip labels
+- **Assessment**: The monophyly status (monophyletic, polyphyletic, or paraphyletic)
+- **Tanglees**: The species that the focal species is entangled with (if any)
+- **IDs**: The sequence identifiers for all tips belonging to this species
+- **Metadata**: Any additional metadata from the optional metadata file
 
-The `planemo-test.yml` workflow automatically runs tests on every push and pull request. It captures all temporary output files generated during testing and uploads them as artifacts. You can:
+### Example Use Case
 
-1. Go to the Actions tab in GitHub
-2. Click on a workflow run
-3. Scroll down to "Artifacts" section
-4. Download `planemo-test-outputs` to view the actual output files generated during testing
-5. The workflow logs also display the contents of TSV output files inline
+If you have a DNA barcode tree with sequences from multiple butterfly species, Monophylizer will:
+1. Identify all sequences belonging to each species
+2. Assess whether those sequences form a single clade
+3. Report any cases where sequences from different species are intermixed
+4. Provide a summary table showing the monophyly status of each species
 
-This is useful for:
-- Debugging test failures
-- Verifying the actual output format
-- Updating test-data files when the tool behavior changes
+This is particularly useful for quality control in DNA barcoding projects and for identifying potential cases of misidentification, contamination, or biological phenomena like hybridization.
+
+## Contributing
+
+Contributions to Monophylizer are welcome! If you would like to contribute:
+
+1. Fork the repository
+2. Create a feature branch for your changes
+3. Make your modifications
+4. Submit a pull request with a clear description of your changes
+
+We appreciate bug reports, feature requests, documentation improvements, and code contributions. Please open an issue on GitHub to discuss major changes before submitting a pull request.
+
+For development guidelines and information about testing and releases, see [DEVELOPMENT.md](DEVELOPMENT.md).
+
+## License
+
+This tool is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
 
 ## Citation
 
-If you use this tool, please cite:
+If you use this tool in your research, please cite:
 
 **Mutanen, M.**, et al., 2016. Species-level para-and polyphyly in DNA barcode gene trees: strong operational bias in European Lepidoptera. _Systematic Biology_. **65(6)**:1024-1040 doi:10.1093/sysbio/syw044
