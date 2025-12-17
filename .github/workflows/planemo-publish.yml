@@ -28,21 +28,26 @@ jobs:
           pip install 'planemo>=0.75'
       
       - name: Create Planemo configuration
+        env:
+          SHED_USERNAME: ${{ secrets.SHED_USERNAME }}
+          SHED_API_KEY: ${{ secrets.SHED_API_KEY }}
+          SHED_EMAIL: ${{ secrets.SHED_EMAIL }}
+          SHED_PASSWORD: ${{ secrets.SHED_PASSWORD }}
         run: |
           cat > $HOME/.planemo.yml << EOF
-          shed_username: ${{ secrets.SHED_USERNAME }}
+          shed_username: ${SHED_USERNAME}
           sheds:
             toolshed:
-              key: ${{ secrets.SHED_API_KEY }}
-              email: ${{ secrets.SHED_EMAIL }}
-              password: ${{ secrets.SHED_PASSWORD }}
+              key: ${SHED_API_KEY}
+              email: ${SHED_EMAIL}
+              password: ${SHED_PASSWORD}
           EOF
           chmod 600 $HOME/.planemo.yml
       
       - name: Publish to Toolshed
         run: |
           # Try shed_update first (for existing tools)
-          if ! planemo shed_update --shed_target toolshed; then
+          if ! planemo shed_update --shed_target toolshed monophylizer.xml; then
             echo "Update failed, attempting to create new tool..."
-            planemo shed_create --shed_target toolshed
+            planemo shed_create --shed_target toolshed monophylizer.xml
           fi
