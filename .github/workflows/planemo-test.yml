@@ -27,6 +27,21 @@ jobs:
           channels: conda-forge,bioconda
           channel-priority: strict
           activate-environment: planemo
+          add-anaconda-token: false
+          remove-defaults: true
+      
+      - name: Verify Conda configuration
+        shell: bash -el {0}
+        run: |
+          echo "=== Conda configuration ==="
+          conda config --show channels
+          conda config --show channel_priority
+          echo "=== Ensuring defaults channel is not present ==="
+          if conda config --show channels | grep -q "defaults"; then
+            echo "ERROR: defaults channel is still present in conda configuration"
+            exit 1
+          fi
+          echo "Conda configuration verified: defaults channel is not present"
       
       - name: Install Planemo
         shell: bash -el {0}
@@ -36,7 +51,7 @@ jobs:
       
       - name: Test tool with Planemo
         shell: bash -el {0}
-        run: planemo test --conda_auto_install monophylizer.xml
+        run: planemo test --conda_auto_install --conda_channels conda-forge,bioconda --conda_ensure_channels conda-forge,bioconda monophylizer.xml
       
       - name: Capture test outputs
         if: always()
