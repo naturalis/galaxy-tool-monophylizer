@@ -46,8 +46,4 @@ jobs:
       
       - name: Publish to Toolshed
         run: |
-          # Try shed_update first (for existing tools)
-          if ! planemo shed_update --shed_target toolshed; then
-            echo "Update failed, attempting to create new tool..."
-            planemo shed_create --shed_target toolshed
-          fi
+          planemo shed_create --shed_target toolshed
