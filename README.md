@@ -52,7 +52,28 @@ planemo shed_update --shed_target toolshed
 
 ## CI/CD and Testing
 
-This repository includes GitHub Actions workflows for continuous testing:
+This repository includes GitHub Actions workflows for continuous testing and publishing:
+
+### Automated Publishing to Galaxy Toolshed
+
+The `planemo-publish.yml` workflow automatically publishes the tool to the Galaxy Toolshed when a new version is tagged. To use this workflow:
+
+1. Set up the following repository secrets (Settings > Secrets and variables > Actions):
+   - `SHED_USERNAME`: Your Galaxy Toolshed username
+   - `SHED_API_KEY`: Your Toolshed API key (found under User > API Keys)
+   - `SHED_EMAIL`: Your Toolshed account email
+   - `SHED_PASSWORD`: Your Toolshed account password
+
+2. Create a new tag to trigger publishing:
+   ```bash
+   git tag v1.0.0
+   git push origin v1.0.0
+   ```
+
+The workflow will automatically:
+- Install Planemo and dependencies
+- Create the Planemo configuration file
+- Update the existing tool in the toolshed (or create it if it doesn't exist yet)
 
 ### Viewing Test Outputs
 
