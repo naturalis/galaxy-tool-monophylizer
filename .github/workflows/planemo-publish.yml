@@ -46,4 +46,4 @@ jobs:
       
       - name: Publish to Toolshed
         run: |
-          planemo shed_create --shed_target toolshed
+          planemo shed_update --shed_target toolshed
