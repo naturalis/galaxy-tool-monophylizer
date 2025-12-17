@@ -27,7 +27,7 @@ jobs:
           channels: conda-forge,bioconda
           channel-priority: strict
           activate-environment: planemo
-          remove-defaults: true
+          conda-remove-defaults: true
       
       - name: Install Planemo
         shell: bash -el {0}
