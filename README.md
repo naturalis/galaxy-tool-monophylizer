@@ -59,10 +59,10 @@ This repository includes GitHub Actions workflows for continuous testing and pub
 The `planemo-publish.yml` workflow automatically publishes the tool to the Galaxy Toolshed when a new version is tagged. To use this workflow:
 
 1. Set up the following repository secrets (Settings > Secrets and variables > Actions):
-   - `SHED_USERNAME`: Your Galaxy Toolshed username
-   - `SHED_API_KEY`: Your Toolshed API key (found under User > API Keys)
-   - `SHED_EMAIL`: Your Toolshed account email
-   - `SHED_PASSWORD`: Your Toolshed account password
+   - `USER`: Your Galaxy Toolshed username
+   - `KEY`: Your Toolshed API key (found under User > API Keys)
+   - `EMAIL`: Your Toolshed account email
+   - `PASS`: Your Toolshed account password
 
 2. Create a new tag to trigger publishing:
    ```bash

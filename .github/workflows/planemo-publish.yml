@@ -29,18 +29,18 @@ jobs:
       
       - name: Create Planemo configuration
         env:
-          SHED_USERNAME: ${{ secrets.SHED_USERNAME }}
-          SHED_API_KEY: ${{ secrets.SHED_API_KEY }}
-          SHED_EMAIL: ${{ secrets.SHED_EMAIL }}
-          SHED_PASSWORD: ${{ secrets.SHED_PASSWORD }}
+          USER: ${{ secrets.USER }}
+          KEY: ${{ secrets.KEY }}
+          EMAIL: ${{ secrets.EMAIL }}
+          PASS: ${{ secrets.PASS }}
         run: |
           cat > $HOME/.planemo.yml << EOF
-          shed_username: ${SHED_USERNAME}
+          shed_username: ${USER}
           sheds:
             toolshed:
-              key: ${SHED_API_KEY}
-              email: ${SHED_EMAIL}
-              password: ${SHED_PASSWORD}
+              key: ${KEY}
+              email: ${EMAIL}
+              password: ${PASS}
           EOF
           chmod 600 $HOME/.planemo.yml
       
