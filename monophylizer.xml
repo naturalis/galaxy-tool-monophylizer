@@ -1,4 +1,4 @@
-<tool id="monophylizer" name="Monophylizer" version="1.0.1">
+<tool id="monophylizer" name="Monophylizer" version="1.0.2">
     <description>Assess monophyly in barcode gene trees</description>
     
     <requirements>
