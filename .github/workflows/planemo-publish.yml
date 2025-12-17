@@ -29,7 +29,6 @@ jobs:
       
       - name: Create Planemo configuration
         run: |
-          mkdir -p $HOME
           cat > $HOME/.planemo.yml << EOF
           shed_username: ${{ secrets.SHED_USERNAME }}
           sheds:
@@ -44,6 +43,6 @@ jobs:
         run: |
           # Try shed_update first (for existing tools)
           if ! planemo shed_update --shed_target toolshed; then
-            echo "Tool not found in toolshed, creating new tool..."
+            echo "Update failed, attempting to create new tool..."
             planemo shed_create --shed_target toolshed
           fi
