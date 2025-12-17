@@ -38,6 +38,7 @@ jobs:
               email: ${{ secrets.SHED_EMAIL }}
               password: ${{ secrets.SHED_PASSWORD }}
           EOF
+          chmod 600 $HOME/.planemo.yml
       
       - name: Publish to Toolshed
         run: |
