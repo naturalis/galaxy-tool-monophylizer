@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      CONDA_CHANNELS: conda-forge,bioconda
     
     steps:
       - name: Checkout repository
@@ -24,7 +26,7 @@ jobs:
         with:
           auto-update-conda: true
           python-version: '3.11'
-          channels: conda-forge,bioconda
+          channels: ${{ env.CONDA_CHANNELS }}
           channel-priority: strict
           activate-environment: planemo
           add-anaconda-token: false
@@ -51,7 +53,7 @@ jobs:
       
       - name: Test tool with Planemo
         shell: bash -el {0}
-        run: planemo test --conda_auto_install --conda_channels conda-forge,bioconda --conda_ensure_channels conda-forge,bioconda monophylizer.xml
+        run: planemo test --conda_auto_install --conda_channels ${{ env.CONDA_CHANNELS }} --conda_ensure_channels ${{ env.CONDA_CHANNELS }} monophylizer.xml
       
       - name: Capture test outputs
         if: always()
